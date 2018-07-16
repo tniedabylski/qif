@@ -13,7 +13,6 @@ namespace QifApi
     /// <summary>
     /// Represents a Document Object Model for a QIF file.
     /// </summary>
-    [ClassInterface(ClassInterfaceType.None)]
     public class QifDom
     {
         /// <summary>
