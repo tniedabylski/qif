@@ -79,13 +79,16 @@ namespace QifApi
             var result = 0m;
             var success = false;
 
-            if (config.ReadDecimalFormatMode == ReadDecimalFormatMode.Default)
+            using (new SpoofCulture(config.CustomReadCultureInfo ?? CultureInfo.CurrentCulture))
             {
-                success = decimal.TryParse(@this, out result);
-            }
-            else
-            {
-                success = decimal.TryParse(@this, config.ParseNumberStyles, CultureInfo.CurrentCulture, out result);
+                if (config.ReadDecimalFormatMode == ReadDecimalFormatMode.Default)
+                {
+                    success = decimal.TryParse(@this, out result);
+                }
+                else
+                {
+                    success = decimal.TryParse(@this, config.ParseNumberStyles, CultureInfo.CurrentCulture, out result);
+                }
             }
 
             // If parsing failed

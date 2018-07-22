@@ -54,6 +54,38 @@ namespace QifApi.Tests
         }
 
         [Test]
+        public void Cannot_import_sample_qif_when_current_culture_is_pl_PL()
+        {
+            var sample = ResourceHelpers.ExtractResourceToString("QifApi.Tests.SampleData.sample.qif");
+
+            Assert.Throws<InvalidCastException>(() =>
+            {
+                using (new SpoofCulture(new CultureInfo("pl-PL")))
+                using (var reader = new StreamReader(sample.ToUTF8MemoryStream()))
+                {
+                    Console.WriteLine(Thread.CurrentThread.CurrentCulture.DisplayName);
+                    new QifDom().Import(reader);
+                }
+            });
+        }
+
+        [Test]
+        public void Can_import_sample_qif_when_current_culture_is_pl_PL_with_Custom()
+        {
+            var sample = ResourceHelpers.ExtractResourceToString("QifApi.Tests.SampleData.sample.qif");
+
+            using (new SpoofCulture(new CultureInfo("pl-PL")))
+            using (var reader = new StreamReader(sample.ToUTF8MemoryStream()))
+            {
+                Console.WriteLine(Thread.CurrentThread.CurrentCulture.DisplayName);
+                new QifDom(new Configuration
+                {
+                    CustomReadCultureInfo = new CultureInfo("en-US")
+                }).Import(reader);
+            }
+        }
+
+        [Test]
         public void Can_import_sample_qif_when_current_culture_is_en_CA_with_Custom()
         {
             var sample = ResourceHelpers.ExtractResourceToString("QifApi.Tests.SampleData.sample.qif");
